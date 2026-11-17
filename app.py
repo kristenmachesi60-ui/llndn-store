@@ -1,7 +1,7 @@
 import os, json, sqlite3, functools, hashlib
 from datetime import datetime
 from flask import (Flask, render_template, request, redirect, url_for,
-                   session, g, flash, jsonify, abort)
+                   session, g, flash, jsonify, abort, send_from_directory)
 from werkzeug.security import generate_password_hash, check_password_hash
 import stripe
 import requests
@@ -699,6 +699,12 @@ def send_order_email(order):
             s.send_message(msg)
     except Exception as e:
         app.logger.error("Email failed: %s", e)
+
+@app.route("/<path:fname>")
+def google_verify(fname):
+    if fname.startswith("google") and fname.endswith(".html"):
+        return send_from_directory(os.path.join(app.root_path, "verification"), fname)
+    abort(404)
 
 @app.route("/robots.txt")
 def robots():
