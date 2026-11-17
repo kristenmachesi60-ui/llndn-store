@@ -700,6 +700,21 @@ def send_order_email(order):
     except Exception as e:
         app.logger.error("Email failed: %s", e)
 
+@app.route("/robots.txt")
+def robots():
+    return "User-agent: *\nAllow: /\nSitemap: https://llndn-store.onrender.com/sitemap.xml\n", 200, {"Content-Type": "text/plain"}
+
+@app.route("/sitemap.xml")
+def sitemap():
+    base = "https://llndn-store.onrender.com"
+    urls = ["/", "/products", "/register", "/track"]
+    for p in query("SELECT id FROM products WHERE active=1"):
+        urls.append(f"/product/{p['id']}")
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml += "".join(f"<url><loc>{base}{u}</loc></url>\n" for u in urls)
+    xml += "</urlset>"
+    return xml, 200, {"Content-Type": "application/xml"}
+
 @app.context_processor
 def inject():
     return {"user": current_user(), "cart_count": sum(i["qty"] for i in cart_items())}
