@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="section-title"><h2>ORDER CONFIRMED</h2><p>Thank you for shopping with LLNDN.G</p></div>
+<div class="panel" style="max-width:700px; margin:0 auto; text-align:center;">
+<p style="font-size:20px;">Order <b>#{{ order.id }}</b> — Status: <b style="color:#c9a227;">{{ order.status }}</b></p>
+<p style="color:#aaa; margin:10px 0 20px;">Total: ${{ '%.2f'|format(order.total) }}</p>
+<table class="data" style="text-align:left;">
+<tr><th>Item</th><th>Qty</th><th>Price</th></tr>
+{% for i in items %}<tr><td>{{ i.product_name }}</td><td>{{ i.quantity }}</td><td>${{ '%.2f'|format(i.price) }}</td></tr>{% endfor %}
+</table>
+<p style="margin-top:20px; color:#888;">A confirmation email has been sent to you. You can track your order anytime.</p>
+<p style="margin-top:15px;"><a class="btn solid" href="{{ url_for('products') }}">Continue Shopping</a></p>
+</div>
+{% endblock %}

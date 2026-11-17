@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="section-title"><h2>TRACK ORDER</h2><p>Enter your order number and email</p></div>
+<div class="panel" style="max-width:500px; margin:0 auto;">
+<form method="get">
+  <input type="number" name="order" placeholder="Order number" required style="width:100%; margin-bottom:12px;">
+  <input type="email" name="email" placeholder="Email used at checkout" required style="width:100%; margin-bottom:20px;">
+  <button class="btn solid" type="submit" style="width:100%;">Track</button>
+</form>
+{% if order %}
+<hr style="border-color:#333; margin:25px 0;">
+<p><b>Order #{{ order.id }}</b> — Status: <b style="color:#c9a227;">{{ order.status }}</b></p>
+<p>Total: ${{ '%.2f'|format(order.total) }} | Placed: {{ order.created_at[:10] }}</p>
+{% if order.tracking_number %}<p>Tracking number: {{ order.tracking_number }}</p>{% endif %}
+{% for i in items %}<p>• {{ i.product_name }} × {{ i.quantity }}</p>{% endfor %}
+{% endif %}
+</div>
+{% endblock %}

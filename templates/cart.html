@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="section-title"><h2>YOUR CART</h2><p>{{ items|length }} item{{ 's' if items|length != 1 }}</p></div>
+{% if items %}
+<div class="panel" style="max-width:800px; margin:0 auto;">
+  <table class="data">
+    <tr><th>Product</th><th>Size</th><th>Color</th><th>Qty</th><th>Price</th><th></th></tr>
+    {% for i in items %}
+    {% set key = i.product.id ~ '|' ~ i.size ~ '|' ~ i.color %}
+    <tr>
+      <td><a href="{{ url_for('product', pid=i.product.id) }}">{{ i.product.name }}</a></td>
+      <td>{{ i.size or '—' }}</td><td>{{ i.color or '—' }}</td>
+      <td>
+        <form class="inline" method="post" action="{{ url_for('cart_update') }}">
+          <input type="hidden" name="key" value="{{ key }}">
+          <input type="number" name="qty" value="{{ i.qty }}" min="0" max="{{ i.product.stock }}" style="width:60px;">
+          <button class="btn" type="submit" style="padding:5px 12px;">Set</button>
+        </form>
+      </td>
+      <td class="price" data-usd="{{ i.product.price * i.qty }}">$ {{ '%.2f'|format(i.product.price * i.qty) }}</td>
+      <td><a href="{{ url_for('cart_remove', key=key) }}">✕</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p style="text-align:right; font-size:22px; margin-top:20px;">Total: <span class="price" data-usd="{{ total }}">$ {{ '%.2f'|format(total) }}</span></p>
+  <p style="text-align:right; margin-top:15px;"><a class="btn solid" href="{{ url_for('checkout') }}">Proceed to Checkout</a></p>
+</div>
+{% else %}
+<p style="text-align:center; color:#888;">Your cart is empty. <a href="{{ url_for('products') }}">Start shopping</a>.</p>
+{% endif %}
+{% endblock %}

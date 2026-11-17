@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}LLNDN.G — Drip Store{% endblock %}</title>
+<meta name="description" content="LLNDN.G Drip Store — luxury streetwear, delivered worldwide.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Montserrat', sans-serif; background: #0a0a0a; color: #fff; }
+  h1, h2, h3, .logo { font-family: 'Cormorant Garamond', serif; }
+  a { color: #c9a227; }
+  nav {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    padding: 18px 50px; border-bottom: 1px solid #2a2a2a;
+    position: sticky; top: 0; background: rgba(10,10,10,0.97); z-index: 100;
+  }
+  nav .logo { font-size: 26px; letter-spacing: 8px; font-weight: 600; color: #c9a227; text-decoration: none; }
+  nav ul { list-style: none; display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+  nav a { color: #ddd; text-decoration: none; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; transition: .3s; }
+  nav a:hover { color: #c9a227; }
+  #cartCount { background: #c9a227; color: #000; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; font-size: 11px; line-height: 20px; }
+  select.currency { background: #111; color: #fff; border: 1px solid #333; padding: 6px 10px; font-size: 12px; letter-spacing: 1px; }
+  .container { max-width: 1250px; margin: 0 auto; padding: 40px 30px; }
+  .section-title { text-align: center; margin-bottom: 45px; }
+  .section-title h2 { font-size: 36px; letter-spacing: 8px; font-weight: 400; color: #c9a227; }
+  .section-title p { color: #888; letter-spacing: 3px; font-size: 12px; text-transform: uppercase; margin-top: 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 30px; }
+  .card { text-align: center; transition: transform .3s; }
+  .card:hover { transform: translateY(-8px); }
+  .card img { width: 100%; height: 320px; object-fit: cover; filter: grayscale(40%); transition: .4s; border: 1px solid #222; }
+  .card img:hover { filter: grayscale(0%); border-color: #c9a227; }
+  .card h3 { margin-top: 15px; letter-spacing: 2px; font-weight: 400; font-size: 19px; }
+  .card p.price { color: #c9a227; letter-spacing: 1px; margin-top: 5px; font-size: 15px; }
+  .card .rating { color: #e0bd45; font-size: 13px; }
+  .btn, button.btn {
+    display: inline-block; background: transparent; border: 1px solid #c9a227; color: #c9a227;
+    padding: 11px 26px; letter-spacing: 2px; font-size: 11px; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; transition: .35s; margin-top: 12px; font-family: inherit;
+  }
+  .btn:hover { background: #c9a227; color: #000; }
+  .btn.solid { background: #c9a227; color: #000; }
+  .btn.solid:hover { background: #e0bd45; }
+  .flash { background: #1a3a24; border: 1px solid #2e7d4f; padding: 12px 20px; margin: 15px 0; text-align: center; }
+  .filters { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; align-items: center; }
+  .filters input, .filters select, input[type=text], input[type=email], input[type=password], input[type=number], textarea, select {
+    background: #111; color: #fff; border: 1px solid #333; padding: 10px 14px; font-family: inherit; font-size: 14px;
+  }
+  form.inline { display: inline; }
+  table.data { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+  table.data th, table.data td { border: 1px solid #333; padding: 9px 12px; text-align: left; }
+  table.data th { background: #161616; color: #c9a227; }
+  .panel { background: #111; border: 1px solid #2a2a2a; padding: 30px; margin: 20px 0; }
+  footer { border-top: 1px solid #2a2a2a; padding: 45px; text-align: center; color: #666; font-size: 12px; letter-spacing: 2px; line-height: 2; margin-top: 60px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+  @media (max-width: 700px) { nav { padding: 15px 20px; } .two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="{{ url_for('home') }}">LLNDN.G</a>
+  <ul>
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('products') }}">Shop</a></li>
+    <li><a href="{{ url_for('cart_view') }}">Cart <span id="cartCount">{{ cart_count }}</span></a></li>
+    <li><a href="{{ url_for('track') }}">Track Order</a></li>
+    {% if user %}
+      <li><a href="{{ url_for('orders') }}">My Orders</a></li>
+      {% if user.is_admin %}<li><a href="{{ url_for('admin') }}">Admin</a></li>{% endif %}
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    {% else %}
+      <li><a href="{{ url_for('login') }}">Login</a></li>
+      <li><a href="{{ url_for('register') }}">Register</a></li>
+    {% endif %}
+    <li><select class="currency" id="currencySel">
+      <option value="USD">USD $</option><option value="EUR">EUR €</option>
+      <option value="GBP">GBP £</option><option value="ZAR">ZAR R</option>
+    </select></li>
+  </ul>
+</nav>
+
+<div class="container">
+{% with msgs = get_flashed_messages() %}{% for m in msgs %}<div class="flash">{{ m }}</div>{% endfor %}{% endwith %}
+{% block content %}{% endblock %}
+</div>
+
+<footer>
+  <p>LLNDN.G DRIP STORE — 12 Main Street, Harare</p>
+  <p>0787 356 172 | info@llndn.g | <a href="{{ url_for('track') }}">Track Your Order</a></p>
+  <p>&copy; 2026 LLNDN.G DRIP STORE. ALL RIGHTS RESERVED.</p>
+</footer>
+
+<script>
+let RATES = {USD:1, EUR:0.92, GBP:0.79, ZAR:18.5};
+fetch('/api/currencies').then(r=>r.json()).then(d=>{ if(d && d.EUR) RATES=d; });
+document.getElementById('currencySel').addEventListener('change', e=>{
+  const cur = e.target.value, rate = (RATES[cur]||1)/(RATES.USD||1);
+  const sym = {USD:'$',EUR:'€',GBP:'£',ZAR:'R'}[cur]||'$';
+  document.querySelectorAll('.price[data-usd]').forEach(el=>{
+    el.innerHTML = sym + (parseFloat(el.dataset.usd)*rate).toFixed(2);
+  });
+});
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

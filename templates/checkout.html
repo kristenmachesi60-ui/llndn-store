@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="section-title"><h2>CHECKOUT</h2><p>Secure international checkout</p></div>
+<div class="two-col">
+  <div class="panel">
+    <h3 style="margin-bottom:15px; color:#c9a227;">Order Summary</h3>
+    {% for i in items %}
+    <p>{{ i.product.name }} ({{ i.size or '—' }}{{ ', ' if i.color }}{{ i.color or '' }}) × {{ i.qty }} — <span class="price" data-usd="{{ i.product.price * i.qty }}">$ {{ '%.2f'|format(i.product.price * i.qty) }}</span></p>
+    {% endfor %}
+    <hr style="border-color:#333; margin:15px 0;">
+    <p>Subtotal: <span class="price" data-usd="{{ total }}">$ {{ '%.2f'|format(total) }}</span></p>
+    <p style="color:#888; font-size:13px;">Shipping calculated at checkout. Prices in USD; your card is charged in USD.</p>
+  </div>
+  <div class="panel">
+    <form method="post">
+      <h3 style="margin-bottom:15px; color:#c9a227;">Shipping Details</h3>
+      {% if not user %}
+      <input type="email" name="email" placeholder="Email for order updates" required style="width:100%; margin-bottom:10px;">
+      {% endif %}
+      <input type="text" name="name" placeholder="Full name" required style="width:100%; margin-bottom:10px;">
+      <input type="text" name="address" placeholder="Street address" required style="width:100%; margin-bottom:10px;">
+      <input type="text" name="city" placeholder="City" required style="width:100%; margin-bottom:10px;">
+      <select name="country" id="countrySel" style="width:100%; margin-bottom:10px;" onchange="calcShip()">
+        {% for c in shipping_rates %}<option value="{{ c }}">{{ c }} — ${{ shipping_rates[c] }}</option>{% endfor %}
+      </select>
+      <input type="text" name="phone" placeholder="Phone (incl. country code)" style="width:100%; margin-bottom:15px;">
+      <input type="text" name="discount" placeholder="Discount code (optional)" style="width:100%; margin-bottom:15px;">
+
+      <h3 style="margin-bottom:15px; color:#c9a227;">Payment Method</h3>
+      <label style="display:block; margin-bottom:8px;"><input type="radio" name="payment" value="stripe" checked> Card (Stripe — Visa, Mastercard)</label>
+      <label style="display:block; margin-bottom:8px;"><input type="radio" name="payment" value="paypal"> PayPal</label>
+      <label style="display:block; margin-bottom:15px;"><input type="radio" name="payment" value="paynow"> Paynow (EcoCash, OneMoney, cards — Zimbabwe)</label>
+
+      <p id="shipLine" style="color:#e0bd45; margin-bottom:15px;"></p>
+      <button class="btn solid" type="submit" style="width:100%;">Place Order &amp; Pay</button>
+      <p style="font-size:12px; color:#666; margin-top:12px; text-align:center;">Payments processed securely by Stripe/PayPal. We never store your card details.</p>
+    </form>
+  </div>
+</div>
+<script>
+function calcShip(){
+  const sel = document.getElementById('countrySel');
+  const opt = sel.options[sel.selectedIndex];
+  const cost = opt.text.split('—')[1].trim();
+  document.getElementById('shipLine').innerText = 'Estimated shipping: ' + cost;
+}
+calcShip();
+</script>
+{% endblock %}

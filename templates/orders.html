@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="section-title"><h2>MY ORDERS</h2></div>
+<div class="panel">
+<table class="data">
+<tr><th>Order</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th>Tracking</th><th></th></tr>
+{% for o in orders %}
+<tr>
+  <td>#{{ o.id }}</td><td>{{ o.created_at[:10] }}</td><td>{{ o.items_count }}</td>
+  <td>${{ '%.2f'|format(o.total) }}</td><td>{{ o.status }}</td><td>{{ o.tracking_number or '—' }}</td>
+  <td><a href="{{ url_for('order_detail', oid=o.id) }}">View</a></td>
+</tr>
+{% else %}<tr><td colspan="7" style="text-align:center; color:#888;">No orders yet.</td></tr>{% endfor %}
+</table>
+</div>
+{% endblock %}

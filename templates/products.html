@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="section-title"><h2>SHOP</h2><p>{{ products|length }} product{{ 's' if products|length != 1 }}</p></div>
+<form class="filters" method="get">
+  <input type="text" name="q" placeholder="Search products..." value="{{ q }}">
+  <select name="category">
+    <option value="">All Categories</option>
+    {% for c in categories %}<option value="{{ c.name }}" {% if cat==c.name %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+  </select>
+  <button class="btn" type="submit">Filter</button>
+</form>
+{% if products %}
+<div class="grid">
+  {% for p in products %}
+  <div class="card">
+    <a href="{{ url_for('product', pid=p.id) }}"><img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy"></a>
+    <h3><a href="{{ url_for('product', pid=p.id) }}" style="color:#fff; text-decoration:none;">{{ p.name }}</a></h3>
+    <p class="price" data-usd="{{ p.price }}">$ {{ '%.2f'|format(p.price) }}</p>
+    <p style="color:#777; font-size:12px;">{{ p.category_name }}</p>
+    <div class="rating">{% if p.avg_rating %}★ {{ '%.1f'|format(p.avg_rating) }} ({{ p.review_count }}){% else %}No reviews{% endif %}</div>
+    <a class="btn" href="{{ url_for('product', pid=p.id) }}">View</a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p style="text-align:center; color:#888;">No products found.</p>
+{% endif %}
+{% endblock %}

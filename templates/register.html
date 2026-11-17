@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel" style="max-width:450px; margin:60px auto;">
+  <h2 style="margin-bottom:25px; text-align:center;">REGISTER</h2>
+  <form method="post">
+    <input type="text" name="name" placeholder="Full name" required style="width:100%; margin-bottom:12px;">
+    <input type="email" name="email" placeholder="Email" required style="width:100%; margin-bottom:12px;">
+    <input type="password" name="password" placeholder="Password" required minlength="8" style="width:100%; margin-bottom:12px;">
+    <select name="country" style="width:100%; margin-bottom:20px;">
+      <option value="Zimbabwe">Zimbabwe</option><option value="South Africa">South Africa</option>
+      <option value="Zambia">Zambia</option><option value="Botswana">Botswana</option>
+      <option value="Kenya">Kenya</option><option value="Nigeria">Nigeria</option>
+      <option value="United Kingdom">United Kingdom</option><option value="United States">United States</option>
+      <option value="Germany">Germany</option><option value="United Arab Emirates">UAE</option>
+      <option value="Australia">Australia</option><option value="Canada">Canada</option><option value="Other">Other</option>
+    </select>
+    <button class="btn solid" type="submit" style="width:100%;">Create Account</button>
+  </form>
+</div>
+{% endblock %}

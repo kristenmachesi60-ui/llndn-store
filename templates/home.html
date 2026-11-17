@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="text-align:center; padding:80px 20px; background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920') center/cover; margin:-40px -30px 50px;">
+  <h1 style="font-size:60px; letter-spacing:12px; font-weight:400;">LLNDN.G</h1>
+  <p style="letter-spacing:4px; color:#ccc; margin:15px 0 30px;">DRIP STORE · STREET LUXURY · SHIPS WORLDWIDE</p>
+  <a class="btn solid" href="{{ url_for('products') }}">Shop Now</a>
+</div>
+
+<div class="section-title"><h2>SHOP BY CATEGORY</h2><p>Curated collections</p></div>
+<div class="grid" style="margin-bottom:60px;">
+  {% for c in categories %}
+  <div class="card"><h3><a href="{{ url_for('products', category=c.name) }}">{{ c.name }}</a></h3></div>
+  {% endfor %}
+</div>
+
+<div class="section-title"><h2>NEW ARRIVALS</h2><p>Fresh drops</p></div>
+<div class="grid">
+  {% for p in products %}
+  <div class="card">
+    <a href="{{ url_for('product', pid=p.id) }}"><img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy"></a>
+    <h3><a href="{{ url_for('product', pid=p.id) }}" style="color:#fff; text-decoration:none;">{{ p.name }}</a></h3>
+    <p class="price" data-usd="{{ p.price }}">$ {{ '%.2f'|format(p.price) }}</p>
+    <div class="rating">{% if p.avg_rating %}★ {{ '%.1f'|format(p.avg_rating) }} ({{ p.review_count }}){% else %}&nbsp;{% endif %}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
