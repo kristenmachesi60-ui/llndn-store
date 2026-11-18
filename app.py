@@ -308,6 +308,8 @@ def register():
             return redirect(url_for("register"))
         uid = execute("INSERT INTO users (email, password_hash, name, country) VALUES (?,?,?,?)",
                       (email, generate_password_hash(password), name, request.form.get("country", "Zimbabwe")))
+        if not query("SELECT id FROM users WHERE is_admin=1 AND id!=?", (uid,), one=True):
+            execute("UPDATE users SET is_admin=1 WHERE id=?", (uid,))
         session["user_id"] = uid
         flash("Account created. Welcome!")
         return redirect(url_for("home"))
